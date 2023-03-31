@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {gatAuth, getAuth, GoogleAuthProvider} from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDBYKMA_bfe0Sl8bU7Zlb6KqqN4xDctQNE",
   authDomain: "practice-nextjs-818b2.firebaseapp.com",
@@ -12,7 +14,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth= getAuth(app);
-const provider = new GoogleAuthProvider();
-
-export {auth,provider};
+export const auth = getAuth(app);
+export const db = getFirestore(app);

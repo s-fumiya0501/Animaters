@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export const Slider = () => {
   return (
-    <div className="slider">
+    <div className="slider ">
       <Splide
         aria-label="私のお気に入りの画像集"
         options={{
