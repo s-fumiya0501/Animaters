@@ -1,20 +1,45 @@
 import { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
+import { getAuth, setPersistence, signInWithEmailAndPassword, browserLocalPersistence } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
+import Router from 'next/router'
 const LogOutInbutton = () => {
-  const [user, loading, error] = useAuthState(auth);
-  const [currentUser, setCurrentUser] = useState(user);
+  const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
-    setCurrentUser(user);
-  }, [user]);
-  const handleLogout = () => {
-    auth.signOut();
+    // ログイン状態を永続化
+    setPersistence(auth,browserLocalPersistence)
+      .then(() => {
+        // ユーザーのログイン状態を監視
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            setCurrentUser(user);
+          } else {
+            setCurrentUser(null);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      auth.signOut()
+      .then(() => {
+        setCurrentUser(null);
+        Router.push("/")
+      })
+// ログアウト
+    } catch (error) {
+      console.error('Error occurred while signing out:', error);
+    }
   };
-  console.log(user?.email)
+
   return (
     <>
-      {user ? (
+      {currentUser ? (
         <button
           className="bg-white text-black rounded-full px-4 py-2 mr-4 hover:bg-gray-200 hidden md:block"
           onClick={handleLogout}

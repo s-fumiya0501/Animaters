@@ -1,17 +1,34 @@
 import { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
+import { getAuth, setPersistence, signInWithEmailAndPassword, browserLocalPersistence } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 const Navigation = () => {
-  const [user] = useAuthState(auth);
+  const [currentUser, setCurrentUser] = useState({});
   const [isOpen, setIsOpen] = useState(false);
-
+  useEffect(() => {
+    // ログイン状態を永続化
+    setPersistence(auth,browserLocalPersistence)
+      .then(() => {
+        // ユーザーのログイン状態を監視
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            setCurrentUser(user);
+          } else {
+            setCurrentUser({});
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   return (
     <>
-      {user ? (
+      {currentUser ? (
         <nav className={`mr-4 ${isOpen ? "block" : "hidden"} md:block`}>
           <ul className="flex">
             <li>

@@ -1,12 +1,60 @@
 import { useState } from "react";
 import { auth } from "../config/firebase";
-import {createUserWithEmailAndPassword } from "firebase/auth";
-import Router from 'next/router'
 
-
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  getAdditionalUserInfo
+} from "firebase/auth";
+import Router from "next/router";
+import styles from "../styles/RegistrationForm.module.css";
+import Image from "next/image";
+import { provider } from "../config/firebase";
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hovered, setHovered] = useState(false);
+  const handleGoogleLogin = async () => {
+    try {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          // The signed-in user info.
+          const additionalUserInfo = getAdditionalUserInfo(result);
+          if(additionalUserInfo?.isNewUser){
+            Router.push("/users/accountsetting");
+          }else{
+            Router.push("/mypage");
+          }
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+  const googleLogo = hovered
+    ? "/images/btn_google_signin_light_focus_web.png"
+    : "/images/btn_google_signin_light_normal_web.png";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,47 +72,61 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <form
-        className="bg-white shadow-md rounded px-12 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Email
+    <div className={styles.containers}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h2 className={styles.heading}>新規登録</h2>
+        <div className={styles.inputSection}>
+          <label htmlFor="email" className={styles.label}>
+            メールアドレス
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="email"
             type="email"
-            placeholder="Email"
+            id="email"
+            className={styles.input}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           />
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password
+        <div className={styles.inputSection}>
+          <label htmlFor="password" className={styles.label}>
+            パスワード
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
             type="password"
-            placeholder="Password"
+            id="password"
+            className={styles.input}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div className={styles.buttonSection}>
+          <button type="submit" className={styles.button}>
+            登録
+          </button>
+          <button className={styles.linkButton}>
+            パスワードを忘れた方はこちら
+          </button>
+          <button className={styles.linkButton}>
+            すでにアカウントをお持ちの方
+          </button>
+        </div>
+        <div className={styles.googleSection}>
+          <p className={styles.googleText}>Googleで登録する</p>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            onClick={handleGoogleLogin}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
-            Sign Up
+            <Image
+              src={googleLogo}
+              alt="signin"
+              width={200}
+              height={200}
+              className="googleIcon"
+            />
           </button>
         </div>
       </form>
     </div>
-
   );
 }

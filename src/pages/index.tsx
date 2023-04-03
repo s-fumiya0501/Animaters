@@ -7,6 +7,8 @@ import Header from '@/components/header'
 import Navigation from '@/components/nav'
 import Slideshow from '@/components/slideshow'
 import "../styles/Slideshow.module.css";
+import HeroContent from '@/components/hero'
+import FeatureContent from '@/components/features'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -20,14 +22,8 @@ export default function Home() {
       </Head>
       <Header/>
       <main>
-        <Slider/>
-        <div className="grid grid-cols-4">
-          <div className="col-span-1 bg-gray-100">1</div>
-          <div className="col-span-2 bg-red-100">
-            <Navigation/>
-          </div>
-          <div className="col-span-1 bg-orange-100">3</div>
-        </div>
+        <HeroContent />
+        <FeatureContent/>
       </main>
       <footer>C</footer>
     </>
