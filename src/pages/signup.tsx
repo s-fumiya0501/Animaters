@@ -26,7 +26,7 @@ export default function SignUp() {
           if(additionalUserInfo?.isNewUser){
             Router.push("/users/accountsetting");
           }else{
-            Router.push("/mypage");
+            Router.push("/users/mypage");
           }
           // IdP data available using getAdditionalUserInfo(result)
           // ...
