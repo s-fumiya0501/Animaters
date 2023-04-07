@@ -1,0 +1,27 @@
+.books_container {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.books_container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.book_section {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+}
+
+.book_section h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.book_section p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}

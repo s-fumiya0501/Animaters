@@ -29,7 +29,7 @@ const getPosts = async (): Promise<Post[]> => {
         id: a.id,
         name: data.name,
         createdAt: data.createdAt,
-        userName: userData.nickname,
+        userName: userData.nickame,
         impression: data.impression,
         rating: data.rating
       });
