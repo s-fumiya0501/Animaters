@@ -20,7 +20,7 @@ const UserInfo = () => {
   const [nickname, setNickname] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [email, setEmail] = useState("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("https://example.com/default-image.jpg");
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
@@ -35,6 +35,7 @@ const UserInfo = () => {
               const docSnap = await getDoc(docRef);
               const data = docSnap.data();
               if (data) {
+                setImageUrl(data.imageUrl);
                 setNickname(data.nickname ?? "noname");
                 setGender(data.gender ?? "");
                 console.log(user.email);
@@ -50,17 +51,17 @@ const UserInfo = () => {
         console.log(error);
       });
   }, []);
-  const imageRef = ref(storage, `users/${user?.uid}/profile-image`);
+  
   useEffect(() => {
+    const imageRef = ref(storage, `users/${imageUrl}`);
     getDownloadURL(imageRef)
       .then((url) => {
         setImageUrl(url);
       })
       .catch((error) => {
-        // デフォルトの画像を表示する
-        setImageUrl(null);
+        console.log(error);
       });
-  }, [user, imageRef]);
+  }, [imageUrl]);
   return (
     <>
       <Header />
