@@ -57,7 +57,7 @@ const AddAccount = () => {
         const S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         const N =16;
         const fileName = Array.from(crypto.getRandomValues(new Uint32Array(N))).map((n)=>S[n%S.length]).join("");
-        const filepath = "images/books/" + fileName;
+        const filepath = "images/users/" + fileName;
         uploadBytes(ref(storage, filepath), file).then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
             setImageUrl(url);

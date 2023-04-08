@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { getAuth, setPersistence, signInWithEmailAndPassword, browserLocalPersistence } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Link from "next/link";
 const Navigation = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [isOpen, setIsOpen] = useState(false);
@@ -32,17 +33,17 @@ const Navigation = () => {
         <nav className={`mr-4 ${isOpen ? "block" : "hidden"} md:block`}>
           <ul className="flex">
             <li>
-              <a href="#" className="mx-2 hover:text-gray-300">
+              <Link href="/users/mypage" className="mx-2 hover:text-gray-300">
                 マイページ
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="mx-2 hover:text-gray-300">
+              <a href="/users/edit" className="mx-2 hover:text-gray-300">
                 ユーザ編集
               </a>
             </li>
             <li>
-              <a href="#" className="mx-2 hover:text-gray-300">
+              <a href="/animes" className="mx-2 hover:text-gray-300">
                 投稿一覧
               </a>
             </li>

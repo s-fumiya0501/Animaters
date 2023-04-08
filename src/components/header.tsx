@@ -13,7 +13,7 @@ const Header = () => {
     <header className="bg-dark-navy text-white h-16 flex items-center justify-between px-4">
       <div>
         <a href="#" className="text-2xl font-bold">
-          Your Logo
+          A n i m a t e r s
         </a>
       </div>
       <div className="flex items-center">

@@ -20,7 +20,7 @@ const UserInfo = () => {
   const [nickname, setNickname] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [email, setEmail] = useState("");
-  const [imageUrl, setImageUrl] = useState<string>("https://example.com/default-image.jpg");
+  const [imageUrl, setImageUrl] = useState<string>("");
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
@@ -51,7 +51,6 @@ const UserInfo = () => {
         console.log(error);
       });
   }, []);
-  
   useEffect(() => {
     const imageRef = ref(storage, `users/${imageUrl}`);
     getDownloadURL(imageRef)

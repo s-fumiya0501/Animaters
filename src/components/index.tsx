@@ -52,7 +52,7 @@ const Books = () => {
             {posts.map((post) => (
               <TableRow key={post.id}>
                 <TableCell component="th" scope="row">
-                  <Link href={`/books/${post.id}`}>{post.name}</Link>
+                  <Link href={`/animes/${post.id}`}>{post.name}</Link>
                 </TableCell>
                 <TableCell>
                   <Rating name="rating" value={post.rating} readOnly />
