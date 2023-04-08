@@ -1,4 +1,4 @@
-import Books from "@/components";
+import Books from "@/components/animeIndex";
 import Header from "@/components/header";
 
 const IndexBook = () => {
