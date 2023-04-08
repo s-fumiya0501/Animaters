@@ -8,6 +8,7 @@ import {
   Timestamp,
   doc,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   GetServerSideProps,
@@ -17,7 +18,9 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-import { Rating } from "@mui/material";
+import { Button, Rating } from "@mui/material";
+import  Router  from "next/router";
+import Link from "next/link";
 
 type Anime = {
   id: string;
@@ -33,15 +36,27 @@ type Props = {
   anime: Anime;
 };
 
+const handleDeletePost = async (id:string) => {
+  if (window.confirm("本当に投稿を削除しますか？")) {
+    await deleteDoc(doc(db, "anime",id));
+    Router.push("/animes")
+  }
+};
+
 const Anime = ({ anime }: Props) => {
   return (
     <>
-      <Header/>
+      <Header />
       <div>
         <h1>{anime.name}</h1>
+        <h1>{anime.uid}</h1>
         <p>{anime.impression}</p>
         <p>{anime.userName}</p>
         <Rating name="rating" value={anime.rating} readOnly />
+        <Button variant="outlined" color="error" onClick={() => handleDeletePost(anime.id)}>
+          削除する
+        </Button>
+        <Link href={`/animes/${anime.id}/edit`}>編集する</Link>
       </div>
     </>
   );

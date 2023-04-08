@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LogOutInbutton from "./login-out_button";
 import Navigation from "./nav";
+import Link from "next/link";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,9 +13,9 @@ const Header = () => {
   return (
     <header className="bg-dark-navy text-white h-16 flex items-center justify-between px-4">
       <div>
-        <a href="#" className="text-2xl font-bold">
+        <Link href="/" className="text-2xl font-bold">
           A n i m a t e r s
-        </a>
+        </Link>
       </div>
       <div className="flex items-center">
         <Navigation />
