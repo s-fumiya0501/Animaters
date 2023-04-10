@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Rating } from "@mui/material";
-import { Timestamp } from "firebase/firestore";
+import { IconButton, Rating } from "@mui/material";
+import { Timestamp, doc, getDoc, runTransaction } from "firebase/firestore";
 import { styled } from "@mui/material/styles";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import {
   Paper,
   Table,
@@ -14,6 +15,7 @@ import {
 import Link from "next/link";
 
 import getPosts from "../lib/getPosts";
+import { db } from "@/config/firebase";
 
 interface Post {
   id: string;
@@ -36,6 +38,11 @@ const Books = () => {
     fetchPosts();
   }, []);
 
+  function favorite(animeid: string,userid:string) {
+    const animeRef = doc(db, "anime", animeid);
+
+  } 
+
   return (
     <div>
       <h2>投稿一覧</h2>
@@ -46,6 +53,7 @@ const Books = () => {
               <TableCell>アニメ名</TableCell>
               <TableCell>Rating</TableCell>
               <TableCell>投稿者</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,6 +66,11 @@ const Books = () => {
                   <Rating name="rating" value={post.rating} readOnly />
                 </TableCell>
                 <TableCell>{post.userName}</TableCell>
+                <TableCell>
+                  <IconButton>
+                    <ThumbUpOffAltIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -66,6 +79,5 @@ const Books = () => {
     </div>
   );
 };
-
 
 export default Books;
