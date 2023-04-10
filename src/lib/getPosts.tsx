@@ -8,6 +8,8 @@ interface Post {
   createdAt: Timestamp;
   rating: number;
   userName: string;
+  liked_by:string[];
+  likes: number;
 }
 
 const getPosts = async (): Promise<Post[]> => {
@@ -31,7 +33,9 @@ const getPosts = async (): Promise<Post[]> => {
         createdAt: data.createdAt,
         userName: userData.nickame,
         impression: data.impression,
-        rating: data.rating
+        rating: data.rating,
+        likes:data.likes,
+        liked_by: data.liked_by
       });
     }
   }

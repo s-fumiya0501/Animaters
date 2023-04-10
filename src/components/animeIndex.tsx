@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { IconButton, Rating } from "@mui/material";
-import { Timestamp, doc, getDoc, runTransaction } from "firebase/firestore";
+import {
+  Timestamp,
+  doc,
+  getDoc,
+  runTransaction,
+  onSnapshot,
+} from "firebase/firestore";
+import { auth } from "@/config/firebase";
 import { styled } from "@mui/material/styles";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import {
@@ -24,6 +31,8 @@ interface Post {
   createdAt: Timestamp;
   rating: number;
   userName: string;
+  liked_by: string[];
+  likes: number;
 }
 
 const Books = () => {
@@ -38,10 +47,50 @@ const Books = () => {
     fetchPosts();
   }, []);
 
-  function favorite(animeid: string,userid:string) {
+  function FavoriteorUnFavorite(animeid: string, userid: string) {
     const animeRef = doc(db, "anime", animeid);
 
-  } 
+    runTransaction(db, (transaction) => {
+      return getDoc(animeRef).then((animeDoc) => {
+        if (!animeDoc.exists()) {
+          throw new Error("Anime document does not exist!");
+        }
+        const likedBy = animeDoc.data()?.liked_by ?? [];
+        const likes = animeDoc.data()?.likes ?? 0;
+
+        if (likedBy.includes(userid)) {
+          const index = likedBy.indexOf(userid);
+          likedBy.splice(index, 1);
+          transaction.update(animeRef, {
+            liked_by: likedBy,
+            likes: likes - 1,
+          });
+          displaylike(animeid);
+          console.log("Anime cancel liked successfully!");
+        } else {
+          transaction.update(animeRef, {
+            liked_by: [...likedBy, userid],
+            likes: likes + 1,
+          });
+          console.log("Anime liked successfully!");
+          displaylike(animeid);
+        }
+      });
+    }).catch((error) => {
+      console.error("Error liking anime: ", error);
+    });
+  }
+
+  function displaylike(animeid: string) {
+    const animeRef = doc(db, "anime", animeid);
+
+    onSnapshot(animeRef, (animeDoc) => {
+      const likes = animeDoc.data()!.likes;
+      const likesElement = document.getElementById("likes-" + animeid);
+      
+      likesElement!.textContent = likes;
+    });
+  }
 
   return (
     <div>
@@ -67,8 +116,17 @@ const Books = () => {
                 </TableCell>
                 <TableCell>{post.userName}</TableCell>
                 <TableCell>
-                  <IconButton>
-                    <ThumbUpOffAltIcon />
+                  <IconButton
+                    onClick={() =>
+                      FavoriteorUnFavorite(post.id, auth.currentUser!.uid)
+                    }
+                  >
+                    {post.liked_by.includes(auth.currentUser!.uid) ? (
+                      <ThumbUpOffAltIcon style={{ color: "green" }} />
+                    ) : (
+                      <ThumbUpOffAltIcon  />
+                    )}
+                    <div id={`likes-${post.id}`}>{post.likes}</div>
                   </IconButton>
                 </TableCell>
               </TableRow>
